@@ -3,6 +3,7 @@ import express from "express";
 
 import { generateShortCode } from "./utils/shortCode.js";
 import urlRoutes from "./routes/url.routes.js"
+import { errorHandler } from "./middleware/errorHandlers.js";
 
 const app = express();
 app.use(express.json())
@@ -21,6 +22,7 @@ app.get("/", async (req, res) => {
 });
 
 app.use("/api", urlRoutes)
+app.use(errorHandler)
 
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
