@@ -4,6 +4,8 @@ import { errorHandler } from "./middleware/errorHandlers.js";
 
 const app = express();
 
+app.set("trust proxy", 1);
+
 // Parse JSON request body
 app.use(express.json());
 
