@@ -1,8 +1,8 @@
 import { generateShortCode } from "../utils/shortCode.js";
 import * as repo from "../repositories/url.respository.js";
+import { AppError } from "../errors/AppError.js";
 
 export const createShortUrl = async (originalUrl: string) => {
-
   let shortCode: string;
 
   do {
@@ -13,5 +13,12 @@ export const createShortUrl = async (originalUrl: string) => {
 };
 
 export const getOriginalUrl = async (shortCode: string) => {
-  return await repo.findByShortCode(shortCode)
-}
+  const url = await repo.findByShortCode(shortCode);
+  if (!url) {
+    throw new AppError(404, "Short URL doesnot exist");
+  }
+  if (new Date(url.expires_on) < new Date()) {
+    throw new AppError(410, "This short URL is expired");
+  }
+  return url;
+};

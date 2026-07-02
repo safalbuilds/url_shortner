@@ -27,3 +27,13 @@ export const findByShortCode = async (shortCode: string) => {
   );
   return result.rows[0];
 };
+
+export const deleteExpiredShortUrl = async () => {
+  const result = pool.query(
+    `
+    DELETE FROM urls
+    WHERE expires_on < NOW()
+    `,
+  );
+  return result;
+};
