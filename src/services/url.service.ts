@@ -12,6 +12,7 @@ export const createShortUrl = async (originalUrl: string) => {
   return await repo.insertUrl(originalUrl, shortCode);
 };
 
+
 export const getOriginalUrl = async (shortCode: string) => {
   const url = await repo.findByShortCode(shortCode);
   if (!url) {

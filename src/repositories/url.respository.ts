@@ -29,7 +29,7 @@ export const findByShortCode = async (shortCode: string) => {
 };
 
 export const deleteExpiredShortUrl = async () => {
-  const result = pool.query(
+  const result = await pool.query(
     `
     DELETE FROM urls
     WHERE expires_on < NOW()
@@ -37,3 +37,23 @@ export const deleteExpiredShortUrl = async () => {
   );
   return result;
 };
+
+export const updateClickCount = async (shortCode: string) => {
+  const result = await pool.query(
+    `UPDATE urls
+    SET click_count = click_count + 1
+    WHERE short_code = $1;
+    `,
+    [shortCode],
+  );
+};
+
+export const getAll = async () => {
+  const result = await pool.query(
+    `
+    SELECT *
+    FROM urls;
+    `
+  )
+  console.log(result.rows)
+}

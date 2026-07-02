@@ -1,7 +1,8 @@
-export const successResponse = (message: string, data: unknown) => {
+export const successResponse = (message: string, data: unknown, shortUrl?:unknown) => {
   return {
     success: true,
     message,
+    shortUrl,
     data,
   };
 };
