@@ -1,15 +1,17 @@
-import type { ShortUrl } from "../types/url.js";
 import { generateShortCode } from "../utils/shortCode.js";
+import * as repo from "../repositories/url.respository.js";
 
-export const createShortUrl = (originalUrl: string): ShortUrl => {
-  const createdAt = new Date();
-  const expiresAt = new Date(createdAt);
-  expiresAt.setDate(expiresAt.getDate() + 7);
+export const createShortUrl = async (originalUrl: string) => {
 
-  return {
-    originalUrl,
-    shortCode: generateShortCode(),
-    createdAt,
-    expiresAt,
-  };
+  let shortCode: string;
+
+  do {
+    shortCode = generateShortCode();
+  } while (await repo.findByShortCode(shortCode));
+
+  return await repo.insertUrl(originalUrl, shortCode);
 };
+
+export const getOriginalUrl = async (shortCode: string) => {
+  return await repo.findByShortCode(shortCode)
+}
