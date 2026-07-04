@@ -1,5 +1,6 @@
 import express from "express";
-import router from "./routes/url.routes.js";
+import urlRouter from "./routes/url.routes.js";
+import docsRouter from "./routes/docs.routes.js";
 import { errorHandler } from "./middleware/errorHandlers.js";
 
 const app = express();
@@ -10,7 +11,8 @@ app.set("trust proxy", 1);
 app.use(express.json());
 
 // API Routes
-app.use("/api", router);
+app.use("/api/docs", docsRouter);
+app.use("/api", urlRouter);
 app.use("/", (req, res)=> {
     res.send("API Running Successfully")
 });
