@@ -1,7 +1,9 @@
 import express from "express";
+import "dotenv/config";
 import urlRouter from "./routes/url.routes.js";
 import docsRouter from "./routes/docs.routes.js";
 import { errorHandler } from "./middleware/errorHandlers.js";
+import { redirectToOriginalUrl } from "./controllers/url.controller.js";
 
 const app = express();
 
@@ -13,9 +15,12 @@ app.use(express.json());
 // API Routes
 app.use("/api/docs", docsRouter);
 app.use("/api", urlRouter);
-app.use("/", (req, res)=> {
+app.use("/health", (req, res)=> {
     res.send("API Running Successfully")
 });
+
+// Redirect endpoint at root level
+app.get("/:shortCode", redirectToOriginalUrl);
 
 // 404 Handler
 app.use((req, res) => {
