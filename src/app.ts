@@ -2,6 +2,7 @@ import express from "express";
 import "dotenv/config";
 import urlRouter from "./routes/url.routes.js";
 import docsRouter from "./routes/docs.routes.js";
+import adminRouter from "./routes/admin.routes.js"
 import { errorHandler } from "./middleware/errorHandlers.js";
 import { redirectToOriginalUrl } from "./controllers/url.controller.js";
 
@@ -15,6 +16,7 @@ app.use(express.json());
 // API Routes
 app.use("/api/docs", docsRouter);
 app.use("/api", urlRouter);
+app.use("/admin", adminRouter)
 app.use("/health", (req, res)=> {
     res.send("API Running Successfully")
 });

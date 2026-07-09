@@ -11,6 +11,8 @@ A minimal, fast URL shortener API built with Express, TypeScript, and PostgreSQL
 | `GET` | `/api/:shortCode` | Redirect to the original URL |
 | `GET` | `/api/stats/:shortCode` | Get statistics for a short URL |
 | `GET` | `/api/docs` | View the API documentation (README) |
+| `GET` | `/admin/fetchAll` | List all short URLs *(dev only)* |
+| `DELETE` | `/admin/delete/:shortcode` | Delete a short URL *(dev only)* |
 
 ## Features
 
@@ -21,6 +23,7 @@ A minimal, fast URL shortener API built with Express, TypeScript, and PostgreSQL
 - Link expiry support (expired links return `410 Gone`)
 - Rate limiting (3 requests/second) on link creation endpoints
 - Dockerized for easy local development and deployment
+- Admin routes for listing and deleting URLs, disabled outside development
 
 ## Tech Stack
 
@@ -47,10 +50,12 @@ src/
 │   └── rateLimit.ts                # Rate limiter for URL creation
 ├── routes/
 │   ├── url.routes.ts               # Route definitions for urls
-│   └── docs.routes.ts              # Route definitions for docs
+│   ├── docs.routes.ts              # Route definitions for docs
+│   └── admin.routes.ts             # Dev-only admin routes (list/delete)
 ├── controllers/
 │   ├── url.controller.ts           # Request handlers
-│   └── docs.controller.ts          # Serves this README as raw markdown
+│   ├── docs.controller.ts          # Serves this README as raw markdown
+│   └── url.admin.controller.ts     # Admin request handlers (fetchAll/delete)
 ├── services/
 │   └── url.service.ts              # Business logic
 ├── repositories/
@@ -77,6 +82,12 @@ Create a `.env` file in the project root:
 PORT=3000
 DATABASE_URL=postgres://user:password@localhost:5432/url_shortner
 ```
+
+`NODE_ENV` controls whether the admin routes (`/admin/fetchAll`, `/admin/delete/:shortcode`)
+are registered. Leave it unset locally so they're available while developing; your hosting
+provider should set `NODE_ENV=production` at deploy time so they're excluded automatically.
+Don't set `NODE_ENV` in your `.env` file for local dev — let it stay unset or use whatever
+your tooling sets by default.
 
 ### Database Setup
 
@@ -189,6 +200,26 @@ GET /api/docs
 ```
 
 Returns this `README.md` file as raw markdown (`Content-Type: text/markdown`). Useful for fetching docs programmatically without leaving your terminal or tooling.
+
+## Admin Routes (development only)
+
+Base path: `/admin`
+
+These routes are only registered when `NODE_ENV !== "production"`. They are not
+protected by authentication, so they should never be reachable on a publicly
+deployed instance — treat `NODE_ENV=production` as the only thing standing
+between these and the public internet, and don't rely on it as a substitute
+for real access control if you plan to keep them around long-term.
+
+```
+GET /admin/fetchAll
+```
+Returns every short URL row in the database.
+
+```
+DELETE /admin/delete/:shortcode
+```
+Permanently deletes the short URL matching `:shortcode`.
 
 ## Rate Limiting
 
