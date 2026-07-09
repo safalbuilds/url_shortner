@@ -15,8 +15,8 @@ app.use(express.json());
 
 // API Routes
 app.use("/api/docs", docsRouter);
+app.use("/api/admin", adminRouter)
 app.use("/api", urlRouter);
-app.use("/admin", adminRouter)
 app.use("/health", (req, res)=> {
     res.send("API Running Successfully")
 });
