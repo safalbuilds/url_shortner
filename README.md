@@ -6,13 +6,14 @@ A minimal, fast URL shortener API built with Express, TypeScript, and PostgreSQL
 
 | Method | Endpoint | Description |
 |--------|----------|-------------|
+| `GET` | `/health` | Redirect to the original URL |
 | `POST` | `/api/short` | Create a random short URL |
 | `POST` | `/api/customShort` | Create a custom short URL |
-| `GET` | `/api/:shortCode` | Redirect to the original URL |
+| `GET` | `/:shortCode` | Redirect to the original URL |
 | `GET` | `/api/stats/:shortCode` | Get statistics for a short URL |
 | `GET` | `/api/docs` | View the API documentation (README) |
-| `GET` | `/admin/fetchAll` | List all short URLs *(dev only)* |
-| `DELETE` | `/admin/delete/:shortcode` | Delete a short URL *(dev only)* |
+| `GET` | `/api/admin/fetchAll` | List all short URLs *(dev only)* |
+| `DELETE` | `/api/admin/delete/:shortcode` | Delete a short URL *(dev only)* |
 
 ## Features
 
